@@ -1,0 +1,3 @@
+sudo netstat -plten |grep java
+
+kill -9 <number>

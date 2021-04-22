@@ -1,0 +1,27 @@
+ssh localhost
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 0600 ~/.ssh/authorized_keys
+bin/hdfs namenode -format
+sbin/start-dfs.sh
+sbin/stop-dfs.sh
+
+
+
+--exec
+export HADOOP_CLASSPATH=${JAVA_HOME}/lib/tools.jar
+bin/hadoop com.sun.tools.javac.Main WordCount.java
+jar cf wc.jar WordCount*.class
+
+--assumption
+/wordcount/input - input directory in HDFS
+/wordcount/output - output directory in HDFS
+
+
+bin/hadoop fs -ls /wordcount/input/
+
+
+bin/hadoop jar wc.jar WordCount /user/joe/wordcount/input /user/joe/wordcount/output
+
+bin/hadoop fs -cat /user/joe/wordcount/output/part-r-00000
+
